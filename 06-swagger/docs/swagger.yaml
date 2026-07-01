@@ -1,0 +1,241 @@
+basePath: /
+definitions:
+  dto.CreatePostDto:
+    properties:
+      description:
+        maxLength: 255
+        minLength: 1
+        type: string
+      subject:
+        maxLength: 255
+        minLength: 1
+        type: string
+    required:
+    - description
+    - subject
+    type: object
+  dto.UpdatePostDto:
+    properties:
+      description:
+        type: string
+      subject:
+        type: string
+    type: object
+  response.CreateResponse:
+    properties:
+      data:
+        $ref: '#/definitions/services.Post'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.DeleteResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.Error:
+    properties:
+      error:
+        $ref: '#/definitions/response.ErrorDetail'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  response.ErrorDetail:
+    properties:
+      code:
+        description: 'error code (e.g.: VALIDATION_ERROR, USER_NOT_FOUND)'
+        type: integer
+      details:
+        description: details (populated only for validation errors)
+      message:
+        description: error message
+        type: string
+    type: object
+  response.ListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/services.Post'
+        type: array
+      message:
+        type: string
+      meta:
+        $ref: '#/definitions/response.Meta'
+      success:
+        type: boolean
+    type: object
+  response.Meta:
+    properties:
+      count:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  services.Post:
+    properties:
+      description:
+        type: string
+      id:
+        type: string
+      subject:
+        type: string
+    type: object
+host: localhost:3007
+info:
+  contact: {}
+  description: My Nika API
+  title: Nika API
+  version: "0.1"
+paths:
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: Find all Post
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ListResponse'
+        "400":
+          description: Error code
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Find all Post
+      tags:
+      - Post
+    post:
+      consumes:
+      - application/json
+      description: Create a Post
+      parameters:
+      - description: Post Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePostDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.CreateResponse'
+        "400":
+          description: Error code
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Create a Post
+      tags:
+      - Post
+  /posts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Post
+      parameters:
+      - example: "1"
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.DeleteResponse'
+        "400":
+          description: Error code
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Delete a Post
+      tags:
+      - Post
+    get:
+      consumes:
+      - application/json
+      description: FindOne a Post
+      parameters:
+      - example: "1"
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CreateResponse'
+        "400":
+          description: Error code
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: FindOne a Post
+      tags:
+      - Post
+    put:
+      consumes:
+      - application/json
+      description: Update a Post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Post Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePostDto'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/response.CreateResponse'
+        "400":
+          description: Error code
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Update a Post
+      tags:
+      - Post
+swagger: "2.0"
